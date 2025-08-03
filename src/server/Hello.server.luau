@@ -1,5 +1,2 @@
-local Workspace = game:GetService("Workspace")
-
-
-
-local Part = Workspace.Part
+-- This file has been replaced by CoinGame.server.luau
+-- You can delete this file if desired

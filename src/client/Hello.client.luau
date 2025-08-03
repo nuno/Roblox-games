@@ -1,1 +1,2 @@
-print("Hello world, from client!")
+-- This file has been replaced by CoinGameUI.client.luau
+-- You can delete this file if desired

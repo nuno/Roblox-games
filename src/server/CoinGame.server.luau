@@ -4,12 +4,8 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- Game Configuration
-local COIN_SPAWN_INTERVAL = 3 -- seconds
-local MAX_COINS = 10
-local COIN_VALUE = 10
-local SPAWN_HEIGHT = 5
-local SPAWN_RADIUS = 100
+-- Import shared configuration
+local GameConfig = require(ReplicatedStorage:WaitForChild("GameConfig"))
 
 -- Storage for active coins
 local activeCoins = {}
@@ -26,19 +22,17 @@ local function createLeaderstats(player)
 	coins.Value = 0
 	coins.Parent = leaderstats
 
-	print(player.Name .. " joined the coin collection game!")
+	print(GameConfig.formatMessage("PLAYER_JOINED", player.Name))
 end
 
 -- Create a coin at a random position
 local function createCoin()
-	if #activeCoins >= MAX_COINS then
+	if #activeCoins >= GameConfig.MAX_COINS then
 		return
 	end
 
-	-- Random position on the baseplate
-	local x = math.random(-SPAWN_RADIUS, SPAWN_RADIUS)
-	local z = math.random(-SPAWN_RADIUS, SPAWN_RADIUS)
-	local y = SPAWN_HEIGHT
+	-- Get random spawn position
+	local position = GameConfig.getRandomSpawnPosition()
 
 	-- Create the coin part
 	local coin = Instance.new("Part")
@@ -47,7 +41,7 @@ local function createCoin()
 	coin.Material = Enum.Material.Neon
 	coin.BrickColor = BrickColor.new("Bright yellow")
 	coin.Size = Vector3.new(0.5, 3, 3)
-	coin.Position = Vector3.new(x, y, z)
+	coin.Position = position
 	coin.Anchored = true
 	coin.CanCollide = false
 	coin.Parent = Workspace
@@ -58,21 +52,17 @@ local function createCoin()
 	spin.MaxTorque = Vector3.new(0, math.huge, 0)
 	spin.Parent = coin
 
-	-- Add glowing effect
-	local pointLight = Instance.new("PointLight")
-	pointLight.Color = Color3.new(1, 1, 0)
-	pointLight.Brightness = 2
-	pointLight.Range = 10
-	pointLight.Parent = coin
+	-- Add glowing effect using shared utility
+	GameConfig.createGlow(coin, GameConfig.UI_COLORS.PRIMARY, 2, 10)
 
 	-- Handle coin collection
 	local function onTouched(hit)
-		local humanoid = hit.Parent:FindFirstChild("Humanoid")
-		if humanoid then
-			local player = Players:GetPlayerFromCharacter(hit.Parent)
-			if player and player.leaderstats then
+		local character = hit.Parent
+		if GameConfig.isValidCharacter(character) then
+			local player = Players:GetPlayerFromCharacter(character)
+			if GameConfig.isValidPlayer(player) then
 				-- Award points
-				player.leaderstats.Coins.Value = player.leaderstats.Coins.Value + COIN_VALUE
+				player.leaderstats.Coins.Value = player.leaderstats.Coins.Value + GameConfig.COIN_VALUE
 
 				-- Remove coin from active list
 				for i, activeCoin in ipairs(activeCoins) do
@@ -85,7 +75,7 @@ local function createCoin()
 				-- Destroy the coin
 				coin:Destroy()
 
-				print(player.Name .. " collected a coin! Total: " .. player.leaderstats.Coins.Value)
+				print(GameConfig.formatMessage("COIN_COLLECTED", player.Name, player.leaderstats.Coins.Value))
 			end
 		end
 	end
@@ -93,7 +83,7 @@ local function createCoin()
 	coin.Touched:Connect(onTouched)
 	table.insert(activeCoins, coin)
 
-	print("Coin spawned at position: " .. tostring(coin.Position))
+	print(GameConfig.formatMessage("COIN_SPAWNED", tostring(coin.Position)))
 end
 
 -- Initialize leaderstats for existing players
@@ -109,10 +99,10 @@ RunService.Heartbeat:Connect(function()
 	local currentTime = tick()
 
 	-- Spawn coins at intervals
-	if currentTime - lastSpawnTime >= COIN_SPAWN_INTERVAL then
+	if currentTime - lastSpawnTime >= GameConfig.COIN_SPAWN_INTERVAL then
 		createCoin()
 		lastSpawnTime = currentTime
 	end
 end)
 
-print("Coin Collection Game started!")
+print(GameConfig.formatMessage("GAME_STARTED"))

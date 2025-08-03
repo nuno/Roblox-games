@@ -1,3 +1,2 @@
-return function()
-	print("Hello, world! and Lucas!")
-end
+-- This file has been replaced by GameConfig.luau
+-- You can delete this file if desired
