@@ -15,6 +15,20 @@ local SPRINT_KEY = Enum.KeyCode.LeftShift
 -- State tracking
 local isSprinting = false
 local sprintConnection = nil
+local sprintStartTime = 0
+local totalSprintTime = 0
+
+-- Remote events for monetization integration
+local remoteEvents = nil
+local updatePlayerData = nil
+
+-- Wait for remote events
+spawn(function()
+	remoteEvents = ReplicatedStorage:WaitForChild("RemoteEvents", 10)
+	if remoteEvents then
+		updatePlayerData = remoteEvents:WaitForChild("UpdatePlayerData", 5)
+	end
+end)
 
 -- Function to update player speed
 local function updateWalkSpeed(speed)
@@ -27,6 +41,7 @@ end
 local function startSprint()
 	if not isSprinting then
 		isSprinting = true
+		sprintStartTime = tick()
 		updateWalkSpeed(GameConfig.SPRINT_WALKSPEED)
 
 		-- Visual feedback - could add breathing effects, camera shake, etc.
@@ -38,9 +53,19 @@ end
 local function stopSprint()
 	if isSprinting then
 		isSprinting = false
+
+		-- Calculate sprint duration and update total
+		local sprintDuration = tick() - sprintStartTime
+		totalSprintTime = totalSprintTime + sprintDuration
+
+		-- Send sprint time to server for achievement tracking
+		if updatePlayerData then
+			updatePlayerData:FireServer("sprintTime", sprintDuration)
+		end
+
 		updateWalkSpeed(GameConfig.NORMAL_WALKSPEED)
 
-		print(player.Name .. " stopped sprinting!")
+		print(player.Name .. " stopped sprinting! (Duration: " .. math.floor(sprintDuration) .. "s)")
 	end
 end
 

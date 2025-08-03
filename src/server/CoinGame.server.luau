@@ -11,19 +11,18 @@ local GameConfig = require(ReplicatedStorage:WaitForChild("GameConfig"))
 local activeCoins = {}
 local lastSpawnTime = 0
 
--- Create leaderstats for players
-local function createLeaderstats(player)
-	local leaderstats = Instance.new("Folder")
-	leaderstats.Name = "leaderstats"
-	leaderstats.Parent = player
+-- Reference to monetization manager (will be set when it loads)
+local monetizationManager = nil
 
-	local coins = Instance.new("IntValue")
-	coins.Name = "Coins"
-	coins.Value = 0
-	coins.Parent = leaderstats
-
-	print(GameConfig.formatMessage("PLAYER_JOINED", player.Name))
-end
+-- Wait for monetization manager to load
+spawn(function()
+	-- Wait for the monetization manager to create remote events
+	local remoteEvents = ReplicatedStorage:WaitForChild("RemoteEvents", 10)
+	if remoteEvents then
+		monetizationManager = true -- Flag that monetization is available
+		print("Coin game integrated with monetization system")
+	end
+end)
 
 -- Create a coin at a random position
 local function createCoin()
@@ -61,8 +60,13 @@ local function createCoin()
 		if GameConfig.isValidCharacter(character) then
 			local player = Players:GetPlayerFromCharacter(character)
 			if GameConfig.isValidPlayer(player) then
-				-- Award points
-				player.leaderstats.Coins.Value = player.leaderstats.Coins.Value + GameConfig.COIN_VALUE
+				-- Award coins through monetization system if available
+				if monetizationManager and _G.MonetizationAwardCoins then
+					_G.MonetizationAwardCoins(player, GameConfig.COIN_VALUE)
+				else
+					-- Fallback to basic system
+					player.leaderstats.Coins.Value = player.leaderstats.Coins.Value + GameConfig.COIN_VALUE
+				end
 
 				-- Remove coin from active list
 				for i, activeCoin in ipairs(activeCoins) do
@@ -86,13 +90,8 @@ local function createCoin()
 	print(GameConfig.formatMessage("COIN_SPAWNED", tostring(coin.Position)))
 end
 
--- Initialize leaderstats for existing players
-for _, player in pairs(Players:GetPlayers()) do
-	createLeaderstats(player)
-end
-
--- Connect player joining
-Players.PlayerAdded:Connect(createLeaderstats)
+-- Note: Leaderstats creation is now handled by MonetizationManager
+-- This ensures proper integration with the monetization system
 
 -- Main game loop
 RunService.Heartbeat:Connect(function()

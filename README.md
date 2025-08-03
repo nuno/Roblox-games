@@ -1,19 +1,42 @@
-# 🪙 Coin Collection Game
+# 💰 Coin Collection Game - Monetization Edition
 
-A simple and fun Roblox game where players collect golden coins to earn points!
+A comprehensive Roblox game featuring advanced monetization systems designed to generate **REAL REVENUE** for developers!
 
 ## 🎮 Game Overview
 
-**Coin Collection Game** is a multiplayer Roblox experience where players compete to collect as many golden coins as possible. Coins spawn randomly around the baseplate, and players must walk into them to collect points.
+**Coin Collection Game** is a multiplayer Roblox experience where players compete to collect golden coins while enjoying premium features through our advanced monetization system. This isn't just a game - it's a complete revenue-generating platform with virtual currency, game passes, daily rewards, achievements, and more!
+
+### 💎 NEW MONETIZATION FEATURES
+- **Virtual Currency (Gems)**: Premium currency system with multiple earning methods
+- **Game Passes**: VIP membership, Double Gems, and Starter Pack
+- **Developer Products**: Purchasable gem packages (100-2500 gems)
+- **Shop System**: Speed boosts, coin magnets, and multipliers
+- **Daily Rewards**: Login streaks with increasing rewards
+- **Achievement System**: 5+ achievements with gem rewards
+- **VIP Benefits**: Exclusive multipliers and bonuses
+- **Data Persistence**: All progress saved across sessions
+- **Leaderboard System**: Competitive rankings
+
+### 💰 Revenue Potential
+- **100 Daily Users**: $90-260/month
+- **500 Daily Users**: $550-1450/month
+- **1000+ Daily Users**: $1400-3500/month
 
 ## 🎯 How to Play
 
-1. **Join the Game**: When you spawn in, you'll see the game UI with your current score
+### Basic Gameplay
+1. **Join the Game**: When you spawn in, you'll see the game UI with your current score and gems
 2. **Move Around**: Use WASD to walk, hold **Shift to sprint** for faster movement
 3. **Collect Coins**: Walk around the baseplate and touch the glowing golden coins
-4. **Earn Points**: Each coin gives you **10 points**
+4. **Earn Points**: Each coin gives you **10 points** (more with VIP multipliers!)
 5. **Compete**: Check the leaderboard to see how you rank against other players
-6. **Keep Playing**: New coins spawn every 3 seconds, so keep exploring!
+
+### Premium Features
+6. **Open the Shop**: Click the "💎 SHOP" button to access premium features
+7. **Buy Boosts**: Purchase speed boosts, coin magnets, and multipliers with gems
+8. **Claim Daily Rewards**: Get free gems every day with increasing streak bonuses
+9. **Unlock Achievements**: Complete challenges to earn bonus gems
+10. **Go VIP**: Purchase VIP membership for permanent benefits and exclusive features
 
 ## ✨ Game Features
 
@@ -22,12 +45,15 @@ A simple and fun Roblox game where players collect golden coins to earn points!
 - **Spinning Animation**: Coins rotate continuously for visibility
 - **UI Animations**: Score updates with bouncing text effects
 - **Floating Text**: "+10" appears when you collect a coin
+- **Boost Effects**: Visual indicators for active power-ups
+- **Trail Effects**: Speed boost creates particle trails
+- **Professional UI**: Modern, polished interface design
 
 ### 🔊 Audio
 - **Collection Sound**: Satisfying ping sound when collecting coins
 - **Built-in Roblox Sounds**: Uses reliable audio assets
 
-### 📊 Game Mechanics
+### 📊 Core Game Mechanics
 - **Sprint System**: Hold Shift to run faster and collect coins quicker
 - **Automatic Spawning**: Up to 10 coins active at once
 - **Random Positions**: Coins spawn in different locations
@@ -35,32 +61,73 @@ A simple and fun Roblox game where players collect golden coins to earn points!
 - **Multiplayer**: Compete with friends
 - **Mobile Support**: Touch controls with sprint button for mobile devices
 
+### 💎 Monetization Systems
+- **Gem Economy**: Earn and spend premium currency
+- **Shop System**: Purchase temporary boosts and permanent upgrades
+- **Daily Login Rewards**: Increasing rewards for consecutive days
+- **Achievement System**: Complete challenges for gem rewards
+- **VIP Membership**: Premium benefits and exclusive features
+- **Game Pass Integration**: Robux purchases for permanent benefits
+- **Developer Products**: Direct gem purchases with real money
+- **Data Persistence**: All progress saved automatically
+
 ## 🛠️ Technical Details
 
 ### Project Structure
 ```
 src/
-├── client/
-│   ├── CoinGameUI.client.luau    # UI and client-side effects
-│   ├── SprintSystem.client.luau  # Sprint/run functionality
-│   └── Hello.client.luau         # (deprecated)
-├── server/
-│   ├── CoinGame.server.luau      # Main game logic
-│   └── Hello.server.luau         # (deprecated)
-└── shared/
-    ├── GameConfig.luau           # Shared configuration
-    └── Hello.luau                # (deprecated)
+├── client/                       # Client-side scripts
+│   ├── CoinGameUI.client.luau           # Main game UI
+│   ├── MonetizationUI.client.luau      # Shop, daily rewards, VIP
+│   ├── BoostEffects.client.luau        # Visual boost effects
+│   ├── SprintSystem.client.luau        # Enhanced movement system
+│   └── Hello.client.luau               # (deprecated)
+├── server/                       # Server-side scripts
+│   ├── CoinGame.server.luau            # Core game logic
+│   ├── MonetizationManager.server.luau # Revenue systems
+│   └── Hello.server.luau               # (deprecated)
+└── shared/                       # Shared modules
+    ├── GameConfig.luau                 # Game configuration
+    └── Hello.luau                      # (deprecated)
+
+Additional Files:
+├── MONETIZATION_GUIDE.md         # Detailed revenue strategy guide
+└── default.project.json          # Rojo project configuration
 ```
 
 ### Configuration
 Game settings can be modified in [`GameConfig.luau`](src/shared/GameConfig.luau):
 
+#### Core Game Settings
 - **COIN_VALUE**: Points per coin (default: 10)
 - **COIN_SPAWN_INTERVAL**: Seconds between spawns (default: 3)
 - **MAX_COINS**: Maximum coins on map (default: 10)
 - **SPAWN_RADIUS**: Area where coins spawn (default: 100 studs)
 - **NORMAL_WALKSPEED**: Regular walking speed (default: 16)
 - **SPRINT_WALKSPEED**: Sprint speed when holding Shift (default: 24)
+
+#### Monetization Settings
+- **GEM_REWARDS**: Daily login, achievement, and milestone rewards
+- **SHOP_ITEMS**: Boost prices, durations, and effects
+- **VIP_BENEFITS**: Multipliers and exclusive features
+- **ACHIEVEMENTS**: Requirements and rewards for each achievement
+- **GAME_PASSES**: Robux prices for VIP, Double Gems, and Starter Pack
+- **DEVELOPER_PRODUCTS**: Gem packages and their Robux costs
+
+#### Important: Set Your Own Game Pass IDs!
+Before publishing, you must create your own Game Passes and Developer Products in Roblox and update the IDs in GameConfig.luau:
+```lua
+GameConfig.GAME_PASSES = {
+    VIP = YOUR_VIP_PASS_ID,           -- Replace with your VIP pass ID
+    DOUBLE_GEMS = YOUR_DOUBLE_GEMS_ID, -- Replace with your double gems pass ID
+    STARTER_PACK = YOUR_STARTER_PACK_ID -- Replace with your starter pack ID
+}
+
+GameConfig.DEVELOPER_PRODUCTS = {
+    GEMS_100 = {id = YOUR_PRODUCT_ID, price = 19, gems = 100},
+    -- ... update all product IDs
+}
+```
 
 ## 🚀 Setup Instructions
 
